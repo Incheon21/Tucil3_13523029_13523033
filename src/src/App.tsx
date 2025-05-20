@@ -24,8 +24,9 @@ const App: React.FC = () => {
       console.log("parse strign:");
       console.log(parsedBoard.toString());
       console.log("exit tag: ", parsedBoard.exitTag);
+      setResult(null);
       setError(null);
-    } catch (err) {
+    } catch (err) { 
       setError(
         `Failed to parse file: ${
           err instanceof Error ? err.message : String(err)
@@ -39,7 +40,7 @@ const App: React.FC = () => {
     heuristic: HeuristicType
   ) => {
     if (!board) return;
-
+    setResult(null);
     setIsLoading(true);
     setError(null);
 

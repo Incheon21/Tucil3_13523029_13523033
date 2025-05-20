@@ -39,15 +39,17 @@ export class Board {
 
   isWithinBounds(row: number, col: number): boolean {
     if (this.exitTag === "top") {
-      return row >= 0 && row <= this.rows && col >= 0 && col < this.cols;
+      return row > 0 && row <= this.rows && col >= 0 && col < this.cols;
     } else if (this.exitTag === "left") {
-      return row >= 0 && row < this.rows && col >= 0 && col <= this.cols;
+      return row >= 0 && row < this.rows && col > 0 && col <= this.cols;
     } else {
       return row >= 0 && row < this.rows && col >= 0 && col < this.cols;
     }
   }
 
-  canMovePiece(piece: Piece, direction: Direction): boolean {
+  // ...existing code...
+
+  canMovePiece(piece: Piece, direction: Direction, steps: number = 1): boolean {
     if (
       piece.orientation === "horizontal" &&
       (direction === "up" || direction === "down")
@@ -61,127 +63,91 @@ export class Board {
       return false;
     }
 
-    // Check if movement is valid
-    if (direction === "up") {
-      const head = piece.getHead();
-      const newRow = head.row - 1;
+    // Try to move the piece one step at a time
+    for (let i = 1; i <= steps; i++) {
+      // For each step, check if we can move one more cell in the direction
+      if (direction === "up") {
+        const head = piece.getHead();
+        const newRow = head.row - i;
 
-      // Special case for primary piece at exit
-      if (
-        piece.isPrimary &&
-        this.exitPosition &&
-        head.col === this.exitPosition.col &&
-        newRow === this.exitPosition.row
-      ) {
-        return true;
-      }
+        if (
+          !this.isWithinBounds(newRow, head.col) ||
+          this.isOccupied(newRow, head.col)
+        ) {
+          return false;
+        }
+      } else if (direction === "down") {
+        const tail = piece.getTail();
+        const newRow = tail.row + i;
 
-      if (
-        !this.isWithinBounds(newRow, head.col) ||
-        this.isOccupied(newRow, head.col)
-      ) {
-        return false;
-      }
-    } else if (direction === "down") {
-      const tail = piece.getTail();
-      const newRow = tail.row + 1;
+        if (
+          !this.isWithinBounds(newRow, tail.col) ||
+          this.isOccupied(newRow, tail.col)
+        ) {
+          return false;
+        }
+      } else if (direction === "left") {
+        const head = piece.getHead();
+        const newCol = head.col - i;
 
-      // Special case for primary piece at exit
-      if (
-        piece.isPrimary &&
-        this.exitPosition &&
-        tail.col === this.exitPosition.col &&
-        newRow === this.exitPosition.row
-      ) {
-        return true;
-      }
+        if (
+          !this.isWithinBounds(head.row, newCol) ||
+          this.isOccupied(head.row, newCol)
+        ) {
+          return false;
+        }
+      } else if (direction === "right") {
+        const tail = piece.getTail();
+        const newCol = tail.col + i;
 
-      if (
-        !this.isWithinBounds(newRow, tail.col) ||
-        this.isOccupied(newRow, tail.col)
-      ) {
-        return false;
-      }
-    } else if (direction === "left") {
-      const head = piece.getHead();
-      const newCol = head.col - 1;
 
-      // Special case for primary piece at exit
-      if (
-        piece.isPrimary &&
-        this.exitPosition &&
-        head.row === this.exitPosition.row &&
-        newCol === this.exitPosition.col
-      ) {
-        return true;
-      }
-
-      if (
-        !this.isWithinBounds(head.row, newCol) ||
-        this.isOccupied(head.row, newCol)
-      ) {
-        return false;
-      }
-    } else if (direction === "right") {
-      console.log("Piece id: ", piece.id);
-      const tail = piece.getTail();
-      console.log("tail: ", tail);
-      const newCol = tail.col + 1;
-      console.log("newCol: ", newCol);
-
-      // Special case for primary piece at exit
-      if (
-        piece.isPrimary &&
-        this.exitPosition &&
-        tail.row === this.exitPosition.row &&
-        newCol === this.exitPosition.col
-      ) {
-        return true;
-      }
-      console.log("isOccupied: ", this.isOccupied(tail.row, newCol));
-      console.log("isWithinBounds: ", this.isWithinBounds(tail.row, newCol));
-      if (
-        !this.isWithinBounds(tail.row, newCol) ||
-        this.isOccupied(tail.row, newCol)
-      ) {
-        return false;
+        if (
+          !this.isWithinBounds(tail.row, newCol) ||
+          this.isOccupied(tail.row, newCol)
+        ) {
+          return false;
+        }
       }
     }
 
     return true;
   }
-  movePiece(piece: Piece, direction: Direction): Piece {
-    if (!this.canMovePiece(piece, direction)) {
-      throw new Error(`Cannot move piece ${piece.id} ${direction}`);
+
+  movePiece(piece: Piece, direction: Direction, steps: number = 1): Piece {
+    if (!this.canMovePiece(piece, direction, steps)) {
+      throw new Error(
+        `Cannot move piece ${piece.id} ${direction} by ${steps} steps`
+      );
     }
 
     const newPiece = piece.clone();
 
     if (direction === "up") {
       newPiece.positions = newPiece.positions.map((pos) => ({
-        row: pos.row - 1,
+        row: pos.row - steps,
         col: pos.col,
       }));
     } else if (direction === "down") {
       newPiece.positions = newPiece.positions.map((pos) => ({
-        row: pos.row + 1,
+        row: pos.row + steps,
         col: pos.col,
       }));
     } else if (direction === "left") {
       newPiece.positions = newPiece.positions.map((pos) => ({
         row: pos.row,
-        col: pos.col - 1,
+        col: pos.col - steps,
       }));
     } else if (direction === "right") {
       newPiece.positions = newPiece.positions.map((pos) => ({
         row: pos.row,
-        col: pos.col + 1,
+        col: pos.col + steps,
       }));
     }
 
     return newPiece;
   }
 
+  // Update the applyMove method to handle steps
   applyMove(move: Move): Board {
     const newBoard = this.clone();
     const pieceIndex = newBoard.pieces.findIndex((p) => p.id === move.piece.id);
@@ -190,11 +156,12 @@ export class Board {
       throw new Error(`Piece ${move.piece.id} not found on board`);
     }
 
-    let newPiece = newBoard.pieces[pieceIndex];
-
-    for (let i = 0; i < move.steps; i++) {
-      newPiece = newBoard.movePiece(newPiece, move.direction);
-    }
+    // Apply the move with specified steps
+    const newPiece = newBoard.movePiece(
+      newBoard.pieces[pieceIndex],
+      move.direction,
+      move.steps
+    );
 
     newBoard.pieces[pieceIndex] = newPiece;
 
@@ -205,6 +172,7 @@ export class Board {
     return newBoard;
   }
 
+  // Update getAvailableMoves to find max steps in each direction
   getAvailableMoves(): Move[] {
     const moves: Move[] = [];
 
@@ -213,44 +181,60 @@ export class Board {
         piece.orientation === "horizontal" ? ["left", "right"] : ["up", "down"];
 
       for (const direction of directions) {
-        if (this.canMovePiece(piece, direction)) {
-          moves.push(new Move(piece, direction));
+        // Find the maximum number of steps the piece can move
+        let maxSteps = 0;
+        let canMove = true;
+
+        while (canMove) {
+          maxSteps++;
+          canMove = this.canMovePiece(piece, direction, maxSteps);
+        }
+
+        maxSteps--; // Adjust after loop exits
+        // Add moves for each step count
+        for (let steps = 1; steps <= maxSteps; steps++) {
+          moves.push(new Move(piece, direction, steps));
         }
       }
     }
 
     return moves;
   }
+  // ...existing code...
 
   canBeSolved(): boolean {
-  if (!this.primaryPiece || !this.exitPosition) {
-    return false;
+    if (!this.primaryPiece || !this.exitPosition) {
+      return false;
+    }
+
+    // Check if orientation aligns with exit tag
+    if (
+      (this.exitTag === "left" || this.exitTag === "right") &&
+      this.primaryPiece.orientation !== "horizontal"
+    ) {
+      return false;
+    }
+
+    if (
+      (this.exitTag === "top" || this.exitTag === "bottom") &&
+      this.primaryPiece.orientation !== "vertical"
+    ) {
+      return false;
+    }
+
+    // Check if row/col aligns with exit position
+    if (this.exitTag === "left" || this.exitTag === "right") {
+      // For horizontal exits, check if any position in the primary piece is on the same row as exit
+      return this.primaryPiece.positions.some(
+        (pos) => pos.row === this.exitPosition!.row
+      );
+    } else {
+      // For vertical exits, check if any position in the primary piece is on the same column as exit
+      return this.primaryPiece.positions.some(
+        (pos) => pos.col === this.exitPosition!.col
+      );
+    }
   }
-  
-  // Check if orientation aligns with exit tag
-  if (
-    (this.exitTag === "left" || this.exitTag === "right") &&
-    this.primaryPiece.orientation !== "horizontal"
-  ) {
-    return false;
-  }
-  
-  if (
-    (this.exitTag === "top" || this.exitTag === "bottom") &&
-    this.primaryPiece.orientation !== "vertical"
-  ) {
-    return false;
-  }
-  
-  // Check if row/col aligns with exit position
-  if (this.exitTag === "left" || this.exitTag === "right") {
-    // For horizontal exits, check if any position in the primary piece is on the same row as exit
-    return this.primaryPiece.positions.some(pos => pos.row === this.exitPosition!.row);
-  } else {
-    // For vertical exits, check if any position in the primary piece is on the same column as exit
-    return this.primaryPiece.positions.some(pos => pos.col === this.exitPosition!.col);
-  }
-}
 
   isPuzzleSolved(): boolean {
     if (!this.primaryPiece || !this.exitPosition) {
