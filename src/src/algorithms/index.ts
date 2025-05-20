@@ -1,11 +1,12 @@
 import { UCS } from "./UCS";
 import { GBFS } from "./GBFS";
 import { AStar } from "./AStar";
+import { FringeSearch } from "./Fringe";
 import { Board } from "../models/Board";
 import { Move } from "../models/Move";
 import type { HeuristicFunction } from "./heuristics";
 
-export type AlgorithmType = "UCS" | "GBFS" | "AStar";
+export type AlgorithmType = "UCS" | "GBFS" | "AStar" | "Fringe";
 
 export interface SolverResult {
   solution: Move[];
@@ -25,6 +26,8 @@ export function solveRushHour(
       return GBFS(board, heuristic);
     case "AStar":
       return AStar(board, heuristic);
+    case "Fringe":
+      return FringeSearch(board, heuristic);
     default:
       throw new Error(`Unknown algorithm: ${algorithm}`);
   }

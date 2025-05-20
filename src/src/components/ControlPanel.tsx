@@ -32,6 +32,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({ onSolve, isLoading, hasBoar
           <option value="UCS">Uniform Cost Search (UCS)</option>
           <option value="GBFS">Greedy Best First Search (GBFS)</option>
           <option value="AStar">A* Search</option>
+          <option value="Fringe">Fringe Search</option>
         </select>
       </div>
       
