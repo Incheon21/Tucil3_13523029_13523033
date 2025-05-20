@@ -15,11 +15,13 @@ const App: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [result, setResult] = useState<SolverResult | null>(null);
+  const [currentFilename, setCurrentFilename] = useState<string>("");
 
-  const handleFileLoad = (content: string) => {
+  const handleFileLoad = (content: string, filename: string) => {
     try {
       const parsedBoard = parseInputFile(content);
       setBoard(parsedBoard);
+      setCurrentFilename(filename);
       console.log("Parsed board:", parsedBoard);
       console.log("parse strign:");
       console.log(parsedBoard.toString());
@@ -121,6 +123,7 @@ const App: React.FC = () => {
             solution={result.solution}
             nodesVisited={result.nodesVisited}
             executionTime={result.executionTime}
+            originalFilename={currentFilename}
           />
         </>
       )}

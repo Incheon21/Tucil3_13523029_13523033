@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import type { ChangeEvent } from 'react';
 
 interface FileInputProps {
-  onFileLoad: (content: string) => void;
+  onFileLoad: (content: string, filename: string) => void;
 }
 
 const FileInput: React.FC<FileInputProps> = ({ onFileLoad }) => {
@@ -18,7 +18,7 @@ const FileInput: React.FC<FileInputProps> = ({ onFileLoad }) => {
     const reader = new FileReader();
     reader.onload = (e) => {
       const content = e.target?.result as string;
-      onFileLoad(content);
+      onFileLoad(content, file.name);
     };
     reader.readAsText(file);
   };

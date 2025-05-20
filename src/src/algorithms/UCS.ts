@@ -12,17 +12,6 @@ export function UCS(initialBoard: Board): {
   const startTime = performance.now();
   let nodesVisited = 0;
 
-    // Check if puzzle can be solved before attempting search
-  if (!initialBoard.canBeSolved()) {
-    console.log("This puzzle cannot be solved because the primary piece orientation doesn't align with the exit");
-    const endTime = performance.now();
-    return {
-      solution: [],
-      nodesVisited: 0,
-      executionTime: endTime - startTime
-    };
-  }
-
   // Create priority queue based on cost (g)
   const openSet = new PriorityQueue<State>({
     comparator: (a, b) => a.cost - b.cost

@@ -16,16 +16,6 @@ export function GBFS(
   const startTime = performance.now();
   let nodesVisited = 0;
 
-  if (!initialBoard.canBeSolved()) {
-    console.log("This puzzle cannot be solved because the primary piece orientation doesn't align with the exit");
-    const endTime = performance.now();
-    return {
-      solution: [],
-      nodesVisited: 0,
-      executionTime: endTime - startTime
-    };
-  }
-
   const openSet = new PriorityQueue<State>({
     comparator: (a, b) => a.heuristicValue - b.heuristicValue
   });
