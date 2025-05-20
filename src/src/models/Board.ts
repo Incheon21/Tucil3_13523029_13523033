@@ -9,22 +9,23 @@ export class Board {
   primaryPiece: Piece | null = null;
   exitPosition: Position | null = null;
   exitTag: "left" | "right" | "top" | "bottom" | null = null;
+  numberOfPieces: number = 0;
 
   constructor(
     rows: number,
     cols: number,
     pieces: Piece[] = [],
     exitPosition: Position | null = null,
-    exitTag: "left" | "right" | "top" | "bottom" | null = null
+    exitTag: "left" | "right" | "top" | "bottom" | null = null,
+    numberOfPieces: number = 0
   ) {
     this.rows = rows;
     this.cols = cols;
     this.pieces = pieces;
     this.exitPosition = exitPosition;
     this.exitTag = exitTag;
-
-    // Find the primary piece
     this.primaryPiece = pieces.find((p) => p.isPrimary) || null;
+    this.numberOfPieces = numberOfPieces;
   }
 
   getPieceAt(row: number, col: number): Piece | null {
@@ -47,7 +48,6 @@ export class Board {
     }
   }
 
-  // ...existing code...
 
   canMovePiece(piece: Piece, direction: Direction, steps: number = 1): boolean {
     if (
@@ -63,9 +63,7 @@ export class Board {
       return false;
     }
 
-    // Try to move the piece one step at a time
     for (let i = 1; i <= steps; i++) {
-      // For each step, check if we can move one more cell in the direction
       if (direction === "up") {
         const head = piece.getHead();
         const newRow = head.row - i;
@@ -99,7 +97,6 @@ export class Board {
       } else if (direction === "right") {
         const tail = piece.getTail();
         const newCol = tail.col + i;
-
 
         if (
           !this.isWithinBounds(tail.row, newCol) ||
@@ -147,7 +144,6 @@ export class Board {
     return newPiece;
   }
 
-  // Update the applyMove method to handle steps
   applyMove(move: Move): Board {
     const newBoard = this.clone();
     const pieceIndex = newBoard.pieces.findIndex((p) => p.id === move.piece.id);
@@ -156,7 +152,6 @@ export class Board {
       throw new Error(`Piece ${move.piece.id} not found on board`);
     }
 
-    // Apply the move with specified steps
     const newPiece = newBoard.movePiece(
       newBoard.pieces[pieceIndex],
       move.direction,
@@ -172,7 +167,6 @@ export class Board {
     return newBoard;
   }
 
-  // Update getAvailableMoves to find max steps in each direction
   getAvailableMoves(): Move[] {
     const moves: Move[] = [];
 
@@ -181,7 +175,6 @@ export class Board {
         piece.orientation === "horizontal" ? ["left", "right"] : ["up", "down"];
 
       for (const direction of directions) {
-        // Find the maximum number of steps the piece can move
         let maxSteps = 0;
         let canMove = true;
 
@@ -190,8 +183,7 @@ export class Board {
           canMove = this.canMovePiece(piece, direction, maxSteps);
         }
 
-        maxSteps--; // Adjust after loop exits
-        // Add moves for each step count
+        maxSteps--;
         for (let steps = 1; steps <= maxSteps; steps++) {
           moves.push(new Move(piece, direction, steps));
         }
@@ -200,14 +192,14 @@ export class Board {
 
     return moves;
   }
-  // ...existing code...
 
   canBeSolved(): boolean {
     if (!this.primaryPiece || !this.exitPosition) {
       return false;
     }
-
-    // Check if orientation aligns with exit tag
+    if (this.numberOfPieces !== this.pieces.length-1) {
+      return false;
+    }
     if (
       (this.exitTag === "left" || this.exitTag === "right") &&
       this.primaryPiece.orientation !== "horizontal"
@@ -222,14 +214,11 @@ export class Board {
       return false;
     }
 
-    // Check if row/col aligns with exit position
     if (this.exitTag === "left" || this.exitTag === "right") {
-      // For horizontal exits, check if any position in the primary piece is on the same row as exit
       return this.primaryPiece.positions.some(
         (pos) => pos.row === this.exitPosition!.row
       );
     } else {
-      // For vertical exits, check if any position in the primary piece is on the same column as exit
       return this.primaryPiece.positions.some(
         (pos) => pos.col === this.exitPosition!.col
       );
@@ -281,36 +270,25 @@ export class Board {
   }
 
   toString(): string {
-    // Determine if we need to extend the grid for exit position
     let effectiveRows = this.rows;
     let effectiveColumns = this.cols;
 
-    // Check if exit is outside the normal grid boundaries
     if (this.exitPosition) {
-      if (this.exitPosition.row == 0) {
+      if (this.exitTag === "top" || this.exitTag === "bottom") {
         effectiveRows++;
-      } else if (this.exitPosition.row >= this.rows) {
-        effectiveRows++;
-      }
-
-      if (this.exitPosition.col == 0) {
-        effectiveColumns++;
-      } else if (this.exitPosition.col >= this.cols) {
+      } else if (this.exitTag === "left" || this.exitTag === "right") {
         effectiveColumns++;
       }
     }
 
-    // Create grid with proper dimensions
     const grid: string[][] = Array(effectiveRows)
       .fill(null)
       .map(() => Array(effectiveColumns).fill("."));
 
-    // Place exit marker first
     if (this.exitPosition) {
       const exitRow = this.exitPosition.row;
       const exitCol = this.exitPosition.col;
 
-      // Make sure exit position is within our adjusted grid
       if (
         exitRow >= 0 &&
         exitRow < effectiveRows &&
@@ -321,7 +299,6 @@ export class Board {
       }
     }
 
-    // Place pieces with appropriate offsets
     for (const piece of this.pieces) {
       for (const pos of piece.positions) {
         const adjustedRow = pos.row;
@@ -338,7 +315,6 @@ export class Board {
     }
 
     console.log("grid: ", grid);
-    // Format grid without missing columns
     const formattedGrid = grid.map((row) => row.join(""));
     return formattedGrid.join("\n");
   }
@@ -353,7 +329,6 @@ export class Board {
     );
   }
 
-  // Method to generate a hash for the current board state (useful for visited states)
   hash(): string {
     return this.toString();
   }

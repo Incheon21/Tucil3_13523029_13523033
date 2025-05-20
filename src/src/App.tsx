@@ -20,15 +20,53 @@ const App: React.FC = () => {
   const handleFileLoad = (content: string, filename: string) => {
     try {
       const parsedBoard = parseInputFile(content);
+      setResult(null);
+
+      console.log("pieces: ", parsedBoard.pieces);
+
+      if (parsedBoard.numberOfPieces !== parsedBoard.pieces.length-1) {
+        setError(
+          `Number of pieces mismatch: Expected ${parsedBoard.numberOfPieces} pieces but found ${parsedBoard.pieces.length-1} pieces`
+        );
+        setBoard(parsedBoard); 
+      }
+      else if (!parsedBoard.canBeSolved()) {
+        if (!parsedBoard.primaryPiece) {
+          setError("No primary piece (P) found in the puzzle");
+        } else if (!parsedBoard.exitPosition) {
+          setError("No exit position (K) found in the puzzle");
+        } else if (
+          (parsedBoard.exitTag === "left" || parsedBoard.exitTag === "right") &&
+          parsedBoard.primaryPiece.orientation !== "horizontal"
+        ) {
+          setError(
+            "Puzzle cannot be solved: Primary piece must be horizontal for left/right exits"
+          );
+        } else if (
+          (parsedBoard.exitTag === "top" || parsedBoard.exitTag === "bottom") &&
+          parsedBoard.primaryPiece.orientation !== "vertical"
+        ) {
+          setError(
+            "Puzzle cannot be solved: Primary piece must be vertical for top/bottom exits"
+          );
+        } else {
+          setError(
+            "Puzzle cannot be solved: Primary piece is not aligned with the exit"
+          );
+        }
+        setBoard(parsedBoard); 
+      } else {
+        setBoard(parsedBoard);
+        setError(null);
+      }
+
       setBoard(parsedBoard);
       setCurrentFilename(filename);
       console.log("Parsed board:", parsedBoard);
       console.log("parse strign:");
       console.log(parsedBoard.toString());
       console.log("exit tag: ", parsedBoard.exitTag);
-      setResult(null);
-      setError(null);
-    } catch (err) { 
+    } catch (err) {
       setError(
         `Failed to parse file: ${
           err instanceof Error ? err.message : String(err)
@@ -47,7 +85,6 @@ const App: React.FC = () => {
     setError(null);
 
     try {
-      // Use setTimeout to allow UI to update before starting the calculation
       setTimeout(() => {
         try {
           const heuristicFn = heuristics[heuristic];
@@ -96,17 +133,23 @@ const App: React.FC = () => {
         <>
           <div className="flex flex-row justify-between gap-6">
             <div className="flex flex-col w-full items-center">
-              <h2 className="flex w-full border-b-2 border-gray-200 mb-6 font-semibold pb-1">Puzzle Configuration</h2>
+              <h2 className="flex w-full border-b-2 border-gray-200 mb-6 font-semibold pb-1">
+                Puzzle Configuration
+              </h2>
               <Board board={board} />
             </div>
-            <div className="flex flex-col w-full">
-              <h2 className="flex w-full border-b-2 border-gray-200 mb-6 font-semibold pb-1">Solver Configuration</h2>
-              <ControlPanel
-                onSolve={handleSolve}
-                isLoading={isLoading}
-                hasBoard={!!board}
-              />
-            </div>
+            {!error && (
+              <div className="flex flex-col w-full">
+                <h2 className="flex w-full border-b-2 border-gray-200 mb-6 font-semibold pb-1">
+                  Solver Configuration
+                </h2>
+                <ControlPanel
+                  onSolve={handleSolve}
+                  isLoading={isLoading}
+                  hasBoard={!!board}
+                />
+              </div>
+            )}
           </div>
         </>
       )}
