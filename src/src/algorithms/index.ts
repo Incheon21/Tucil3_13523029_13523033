@@ -1,10 +1,11 @@
-import { UCS } from './UCS';
-import { GBFS } from './GBFS';
-import { Board } from '../models/Board';
-import { Move } from '../models/Move';
-import type { HeuristicFunction } from './heuristics';
+import { UCS } from "./UCS";
+import { GBFS } from "./GBFS";
+import { AStar } from "./AStar";
+import { Board } from "../models/Board";
+import { Move } from "../models/Move";
+import type { HeuristicFunction } from "./heuristics";
 
-export type AlgorithmType = 'UCS' | 'GBFS';
+export type AlgorithmType = "UCS" | "GBFS" | "AStar";
 
 export interface SolverResult {
   solution: Move[];
@@ -18,10 +19,12 @@ export function solveRushHour(
   heuristic: HeuristicFunction
 ): SolverResult {
   switch (algorithm) {
-    case 'UCS':
+    case "UCS":
       return UCS(board);
-    case 'GBFS':
+    case "GBFS":
       return GBFS(board, heuristic);
+    case "AStar":
+      return AStar(board, heuristic);
     default:
       throw new Error(`Unknown algorithm: ${algorithm}`);
   }

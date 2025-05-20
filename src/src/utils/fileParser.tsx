@@ -7,7 +7,7 @@ export function parseInputFile(fileContent: string): Board {
   
   const [rows, cols] = lines[0].split(' ').map(Number);
   
-  const nonPrimaryPieceCount = parseInt(lines[1], 10);
+  // const nonPrimaryPieceCount = parseInt(lines[1], 10);
   
   const boardConfig = lines.slice(2, 2 + rows);
   

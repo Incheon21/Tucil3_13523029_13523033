@@ -62,7 +62,6 @@ export class Board {
     }
 
     // Check if movement is valid
-    let newPositions: Position[] = [];
     if (direction === "up") {
       const head = piece.getHead();
       const newRow = head.row - 1;
@@ -83,7 +82,6 @@ export class Board {
       ) {
         return false;
       }
-      newPositions = [{ row: newRow, col: head.col }];
     } else if (direction === "down") {
       const tail = piece.getTail();
       const newRow = tail.row + 1;
@@ -104,7 +102,6 @@ export class Board {
       ) {
         return false;
       }
-      newPositions = [{ row: newRow, col: tail.col }];
     } else if (direction === "left") {
       const head = piece.getHead();
       const newCol = head.col - 1;
@@ -125,7 +122,6 @@ export class Board {
       ) {
         return false;
       }
-      newPositions = [{ row: head.row, col: newCol }];
     } else if (direction === "right") {
       console.log("Piece id: ", piece.id);
       const tail = piece.getTail();
@@ -150,7 +146,6 @@ export class Board {
       ) {
         return false;
       }
-      newPositions = [{ row: tail.row, col: newCol }];
     }
 
     return true;
@@ -298,6 +293,7 @@ export class Board {
         primaryHead.col === this.exitPosition.col
       );
     }
+    return false;
   }
 
   toString(): string {
