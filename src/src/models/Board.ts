@@ -313,8 +313,6 @@ export class Board {
         }
       }
     }
-
-    console.log("grid: ", grid);
     const formattedGrid = grid.map((row) => row.join(""));
     return formattedGrid.join("\n");
   }

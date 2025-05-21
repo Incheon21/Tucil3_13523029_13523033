@@ -36,7 +36,6 @@ export function UCS(initialBoard: Board): {
     }
     
     const availableMoves = current.board.getAvailableMoves();
-    console.log("Available moves: ", availableMoves);
     
     for (const move of availableMoves) {
       const newBoard = current.board.applyMove(move);

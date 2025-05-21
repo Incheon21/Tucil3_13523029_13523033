@@ -1,8 +1,9 @@
 6 6
-7
- ....CC
- ....BB
- ......
- ...GG.
- EE....
-K.PPFF.
+10
+ K
+AAB..F
+..BCDF
+GPBCDF
+GP.III
+GHH...
+LL.MM.

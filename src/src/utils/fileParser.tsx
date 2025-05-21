@@ -2,7 +2,6 @@ import { Board } from "../models/Board";
 import { Piece } from "../models/Piece";
 import type { Position, Orientation } from "../models/Piece";
 
-
 export function parseInputFile(fileContent: string): Board {
   const normalizedContent = fileContent
     .replace(/\r\n/g, "\n")
@@ -76,7 +75,7 @@ export function parseInputFile(fileContent: string): Board {
     const trimmedLine = line.trim();
 
     if (trimmedLine === "K") {
-      continue; 
+      continue;
     }
 
     if (line.includes("K")) {
@@ -126,9 +125,20 @@ export function parseInputFile(fileContent: string): Board {
   const hasTopExitIndicator = potentialBoardLines[0].trim() === "K";
 
   let boardConfig: string[];
+  let topExitColumn: number | null = null;
+  let bottomExitColumn: number | null = null;
+
   if (hasTopExitIndicator) {
+    const topLine = potentialBoardLines[0];
+    topExitColumn = topLine.indexOf("K");
+    console.log("Found top exit at column:", topExitColumn);
+
     boardConfig = potentialBoardLines.slice(1, rows + 1);
   } else if (hasBottomExitIndicator) {
+    const bottomLine = potentialBoardLines[potentialBoardLines.length - 1];
+    bottomExitColumn = bottomLine.indexOf("K");
+    console.log("Found bottom exit at column:", bottomExitColumn);
+
     boardConfig = potentialBoardLines.slice(0, rows);
   } else {
     boardConfig = potentialBoardLines.slice(0, rows);
@@ -250,17 +260,19 @@ export function parseInputFile(fileContent: string): Board {
   }
 
   if (!exitPosition) {
-    if (hasTopExitIndicator) {
+    if (hasTopExitIndicator && topExitColumn !== null) {
       for (let col = 0; col < cols; col++) {
-        if (gameArea.has(`0,${col}`)) {
+        if (col === topExitColumn && gameArea.has(`0,${col}`)) {
+          console.log("Found exit indicator at: ", 0, col);
           exitPosition = { row: 0, col: col };
           exitTag = "top";
           break;
         }
       }
-    } else if (hasBottomExitIndicator) {
+    } else if (hasBottomExitIndicator && bottomExitColumn !== null) {
       for (let col = 0; col < cols; col++) {
-        if (gameArea.has(`${rows - 1},${col}`)) {
+        if (col === bottomExitColumn && gameArea.has(`${rows - 1},${col}`)) {
+          console.log("Found bottom exit indicator at: ", rows - 1, col);
           exitPosition = { row: rows, col: col };
           exitTag = "bottom";
           break;
@@ -299,7 +311,6 @@ export function parseInputFile(fileContent: string): Board {
       exitTag = "right";
     }
   }
-
 
   if (exitPosition && exitTag) {
     const { row, col } = exitPosition;
@@ -353,7 +364,6 @@ export function parseInputFile(fileContent: string): Board {
       );
     }
   }
-
 
   console.log("Exit sinini tag: ", exitTag);
 
