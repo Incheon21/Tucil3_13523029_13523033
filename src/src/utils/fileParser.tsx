@@ -320,7 +320,7 @@ export function parseInputFile(fileContent: string): Board {
     if (exitTag === "top" || exitTag === "bottom") {
       const columnHasGameCells = Array.from(gameArea).some((pos) => {
         const [posRow, posCol] = pos.split(",").map(Number);
-        return posCol === col;
+        return posCol === col && (posRow >= 0 && posRow < rows);
       });
       isExitValid = columnHasGameCells;
 
@@ -336,7 +336,7 @@ export function parseInputFile(fileContent: string): Board {
     } else if (exitTag === "left" || exitTag === "right") {
       const rowHasGameCells = Array.from(gameArea).some((pos) => {
         const [posRow, posCol] = pos.split(",").map(Number);
-        return posRow === row;
+        return posRow === row && posCol >= 0 && posCol < cols;
       });
       isExitValid = rowHasGameCells;
 
