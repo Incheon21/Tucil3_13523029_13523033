@@ -35,7 +35,6 @@ const SolutionDisplay: React.FC<SolutionDisplayProps> = ({
 
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [boardStates] = useState<BoardModel[]>(() => {
-    // Generate all board states from the solution
     const states: BoardModel[] = [initialBoard];
     let currentBoard = initialBoard.clone();
 
