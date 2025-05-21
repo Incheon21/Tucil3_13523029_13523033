@@ -28,7 +28,6 @@ const App: React.FC = () => {
         setError(
           `Number of pieces mismatch: Expected ${parsedBoard.numberOfPieces} pieces but found ${parsedBoard.pieces.length-1} pieces`
         );
-        setBoard(parsedBoard); 
       }
       else if (!parsedBoard.canBeSolved()) {
         if (!parsedBoard.primaryPiece) {
@@ -54,7 +53,6 @@ const App: React.FC = () => {
             "Puzzle cannot be solved: Primary piece is not aligned with the exit"
           );
         }
-        setBoard(parsedBoard); 
       } else {
         setBoard(parsedBoard);
         setError(null);
@@ -67,6 +65,8 @@ const App: React.FC = () => {
       console.log(parsedBoard.toString());
       console.log("exit tag: ", parsedBoard.exitTag);
     } catch (err) {
+      setBoard(null);
+      setResult(null);
       setError(
         `Failed to parse file: ${
           err instanceof Error ? err.message : String(err)

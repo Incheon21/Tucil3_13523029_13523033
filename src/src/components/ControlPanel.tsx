@@ -56,7 +56,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({ onSolve, isLoading, hasBoar
       <button 
         onClick={handleSolve} 
         disabled={isLoading || !hasBoard}
-        className="px-4 py-2 bg-blue-600 text-white font-bold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+        className="px-4 py-2 text-white font-bold rounded-md bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
       >
         {isLoading ? 'Solving...' : 'Solve Puzzle'}
       </button>

@@ -12,12 +12,10 @@ const Board: React.FC<BoardProps> = ({ board, movedPieceId }) => {
   let effectiveColumns = board.cols;
 
   if (board.exitPosition) {
-    if (board.exitPosition) {
-      if (board.exitTag === "top" || board.exitTag === "bottom") {
-        effectiveRows++;
-      } else if (board.exitTag === "left" || board.exitTag === "right") {
-        effectiveColumns++;
-      }
+    if (board.exitTag === "top" || board.exitTag === "bottom") {
+      effectiveRows++;
+    } else if (board.exitTag === "left" || board.exitTag === "right") {
+      effectiveColumns++;
     }
   }
 
@@ -68,18 +66,29 @@ const Board: React.FC<BoardProps> = ({ board, movedPieceId }) => {
     });
   });
 
+  const isExitRow = (rowIndex: number): boolean => 
+    (board.exitTag === "top" && rowIndex === 0) || 
+    (board.exitTag === "bottom" && rowIndex === effectiveRows - 1);
+
+  const isExitCol = (colIndex: number): boolean => 
+    (board.exitTag === "left" && colIndex === 0) || 
+    (board.exitTag === "right" && colIndex === effectiveColumns - 1);
+
+  const isExitPathCell = (rowIndex: number, colIndex: number): boolean => {
+    if (!board.exitPosition) return false;
+    
+    if (board.exitTag === "top" && colIndex === exitCol && rowIndex === 0) return true;
+    if (board.exitTag === "bottom" && colIndex === exitCol && rowIndex === effectiveRows - 1) return true;
+    if (board.exitTag === "left" && rowIndex === exitRow && colIndex === 0) return true;
+    if (board.exitTag === "right" && rowIndex === exitRow && colIndex === effectiveColumns - 1) return true;
+    
+    return false;
+  };
+
   return (
     <div className="inline-block border-2 border-gray-700 bg-gray-100 my-5 p-4 rounded">
       {grid.map((row, rowIndex) => (
-        <div
-          key={rowIndex}
-          className={`flex ${
-            (board.exitTag === "top" || board.exitTag === "bottom") &&
-            rowIndex === exitRow
-              ? "bg-neutral-600"
-              : ""
-          }`}
-        >
+        <div key={rowIndex} className="flex">
           {row.map((cell, colIndex) => (
             <Cell
               key={`${rowIndex}-${colIndex}`}
@@ -87,10 +96,9 @@ const Board: React.FC<BoardProps> = ({ board, movedPieceId }) => {
               isPrimary={cell?.isPrimary || false}
               isExit={cell?.isExit || false}
               isMoved={cell?.isMoved || false}
-              isExitPath={
-                (board.exitTag === "left" || board.exitTag === "right") &&
-                colIndex === exitCol
-              }
+              isExitPath={isExitPathCell(rowIndex, colIndex)}
+              isExitRow={isExitRow(rowIndex) && !isExitPathCell(rowIndex, colIndex)}
+              isExitColumn={isExitCol(colIndex) && !isExitPathCell(rowIndex, colIndex)}
             />
           ))}
         </div>

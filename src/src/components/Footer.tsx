@@ -1,13 +1,13 @@
 const Footer = () => {
   return (
-    <footer className="bg-gray-800 text-white py-4">
+    <footer className="bg-black text-white py-4">
       <div className="container mx-auto text-center">
         <div className="flex justify-center space-x-4 mb-3">
           <a
-            href="https://github.com/yourusername/stima2"
+            href="https://github.com/Incheon21/Tucil3_13523029_13523033"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-white hover:text-gray-400 transition-colors"
+            className="text-pink-400 hover:text-pink-300 transition-colors"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -28,7 +28,7 @@ const Footer = () => {
               href="https://instagram.com/bryho_" 
               target="_blank"
               rel="noopener noreferrer"
-              className="ml-2 text-white hover:text-pink-400 transition-colors"
+              className="ml-2 text-pink-400 hover:text-pink-300 transition-colors"
             >
               <svg 
                 xmlns="http://www.w3.org/2000/svg" 
@@ -47,7 +47,7 @@ const Footer = () => {
               href="https://instagram.com/alvinchrs" 
               target="_blank"
               rel="noopener noreferrer"
-              className="ml-2 text-white hover:text-pink-400 transition-colors"
+              className="ml-2 text-pink-400 hover:text-pink-300 transition-colors"
             >
               <svg 
                 xmlns="http://www.w3.org/2000/svg" 

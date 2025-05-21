@@ -24,7 +24,7 @@ const SolutionDisplay: React.FC<SolutionDisplayProps> = ({
       "This puzzle cannot be solved because the primary piece orientation doesn't align with the exit"
     );
     return (
-      <div className="my-5 p-4 bg-red-100 rounded-md border border-red-300 text-red-800">
+      <div className="my-5 p-4 bg-red-900 rounded-md border border-red-700 text-pink-200">
         <strong>
           This puzzle cannot be solved because the primary piece orientation
           doesn't align with the exit.
@@ -81,18 +81,18 @@ const SolutionDisplay: React.FC<SolutionDisplayProps> = ({
   };
 
   return (
-    <div className="my-5 p-4 bg-gray-50 rounded-md border border-gray-300">
+    <div className="my-5 p-4 rounded-md border  text-white">
       <div className="flex justify-between mb-4">
-        <div className="px-3 py-2 bg-gray-200 rounded-md">
-          <span className="font-bold mr-1">Solution Length:</span>
+        <div className="px-3 py-2 bg-gray-900 rounded-md border border-pink-700">
+          <span className="font-bold mr-1 text-pink-400">Solution Length:</span>
           <span>{solution.length} moves</span>
         </div>
-        <div className="px-3 py-2 bg-gray-200 rounded-md">
-          <span className="font-bold mr-1">Nodes Visited:</span>
+        <div className="px-3 py-2 bg-gray-900 rounded-md border border-pink-700">
+          <span className="font-bold mr-1 text-pink-400">Nodes Visited:</span>
           <span>{nodesVisited}</span>
         </div>
-        <div className="px-3 py-2 bg-gray-200 rounded-md">
-          <span className="font-bold mr-1">Execution Time:</span>
+        <div className="px-3 py-2 bg-gray-900 rounded-md border border-pink-700">
+          <span className="font-bold mr-1 text-pink-400">Execution Time:</span>
           <span>{executionTime.toFixed(2)} ms</span>
         </div>
       </div>
@@ -101,7 +101,7 @@ const SolutionDisplay: React.FC<SolutionDisplayProps> = ({
         <Board board={currentBoard} movedPieceId={currentMove?.piece.id} />
       </div>
 
-      <div className="text-center my-3 font-bold">
+      <div className="text-center my-3 font-bold text-pink-400">
         {currentStep > 0 ? (
           <div>
             Move {currentStep}: {currentMove?.piece.id}-{currentMove?.direction}
@@ -115,24 +115,24 @@ const SolutionDisplay: React.FC<SolutionDisplayProps> = ({
         <button
           onClick={handlePrevStep}
           disabled={currentStep === 0}
-          className="px-3 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+          className="px-3 py-2 bg-pink-600 text-white rounded-md hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-pink-500 disabled:bg-gray-800 disabled:text-gray-500 disabled:cursor-not-allowed transition-colors"
         >
           Previous
         </button>
-        <div className="font-bold">
+        <div className="font-bold text-pink-300">
           {currentStep} / {totalSteps - 1}
         </div>
         <button
           onClick={handleNextStep}
           disabled={currentStep === totalSteps - 1}
-          className="px-3 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+          className="px-3 py-2 bg-pink-600 text-white rounded-md hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-pink-500 disabled:bg-gray-800 disabled:text-gray-500 disabled:cursor-not-allowed transition-colors"
         >
           Next
         </button>
         <button
           onClick={handleAutoPlay}
           disabled={currentStep === totalSteps - 1}
-          className="px-3 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+          className="px-3 py-2 bg-pink-600 text-white rounded-md hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-pink-500 disabled:bg-gray-800 disabled:text-gray-500 disabled:cursor-not-allowed transition-colors"
         >
           Auto Play
         </button>
@@ -142,7 +142,7 @@ const SolutionDisplay: React.FC<SolutionDisplayProps> = ({
         <div className="flex justify-center mt-5">
           <button
             onClick={handleSaveSolution}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors flex items-center gap-2"
+            className="px-4 py-2 bg-pink-600 text-white rounded-md hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-pink-500 transition-colors flex items-center gap-2"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

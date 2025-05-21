@@ -40,7 +40,7 @@ const FileInput: React.FC<FileInputProps> = ({ onFileLoad }) => {
       
       <button 
         onClick={handleButtonClick}
-        className="flex items-center justify-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 transform hover:-translate-y-0.5 active:translate-y-0 shadow-md"
+        className="flex items-center justify-center space-x-2 bg-pink-600 hover:bg-pink-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 transform hover:-translate-y-0.5 active:translate-y-0 shadow-md"
         type="button"
       >
         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -50,9 +50,9 @@ const FileInput: React.FC<FileInputProps> = ({ onFileLoad }) => {
       </button>
       
       {fileName && (
-        <div className="text-sm text-gray-600 flex items-center">
+        <div className="text-sm text-gray-300 flex items-center">
           <span>Selected: </span>
-          <span className="ml-1 text-blue-800 font-medium">{fileName}</span>
+          <span className="ml-1 text-pink-400 font-medium">{fileName}</span>
         </div>
       )}
     </div>
